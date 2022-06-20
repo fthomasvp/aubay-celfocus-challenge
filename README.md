@@ -88,8 +88,6 @@ npm run build
 
 This project has implemented unit tests for componentes and pages using [Vitest](https://vitest.dev). It's also has a coverage report.
 
-### Unit tests
-
 To see the unit tests on _watch mode_, run the command below:
 
 ```bash
