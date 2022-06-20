@@ -6,25 +6,26 @@ The website you have to build is simple:
 
 in `/` the user should see the company list
 
-![Companies](companies.png "Companies")
+![Companies](../docs/assets/images/companies.png "Companies")
 
-*clicking on a company should navigate to `/company/:companyId`*
+_clicking on a company should navigate to `/company/:companyId`_
 
 in `/company/:companyId` the user should see a table of numbers that belong to that company
 
-![Local Public Office](companynums.png "Local Public Office")
+![Local Public Office](../docs/assets/images/companynums.png "Local Public Office")
 
-*clicking on a number should navigate to `/number/:numberId`*
+_clicking on a number should navigate to `/number/:numberId`_
 
 in `/number/:numberId` the user should see the number details
 
-![351910000000](num.png "351910000000")
+![351910000000](../docs/assets/images/num.png "351910000000")
 
 in both `/number/:numberId` and `/companies/:companyId` there should be a `Go Back` button that goes to the previous page
 
 We have provided no tooling for react so you can chose your own, don't forget to document the necessary steps to run, build and test your app.
 
 # Prerequisites
+
 Install [node.js](https://nodejs.org/en/) which includes [npm](https://npmjs.com)
 
 ## Running
