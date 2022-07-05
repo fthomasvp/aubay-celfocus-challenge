@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-import { render } from "../../../utils/test-utils";
+import { render, waitFor } from "../../../utils/test-utils";
 import { CompanyContext } from "../../../contexts/company.context";
 import {
   mockCompanies,
@@ -8,11 +8,31 @@ import {
 } from "../../../mocks/companies/company.handlers";
 
 import CompanyDetailsPage from "./CompanyDetailsPage";
+import { Company } from "../../../features/companies/company.type";
+
+vi.mock("react-router-dom", async () => {
+  const reactRouterDom = (await vi.importActual("react-router-dom")) as Object;
+
+  return {
+    ...reactRouterDom,
+    useParams: () => ({
+      companyId: "4",
+    }),
+    useRouteMatch: () => ({ url: "/companies/4" }),
+  };
+});
+
+vi.mock("../../features/companies/company.service", () => {
+  return {
+    getCompanyByIdService: vi.fn(() => mockCompanies.data[1]),
+    getNumbersByCompanyIdService: vi.fn(() => mockCompanies),
+  };
+});
 
 describe("CompanyDetailsPage", () => {
   const companyProviderProps = {
     value: {
-      companies: mockCompanies,
+      companies: mockCompanies.data as Company[],
       setCompanies: vi.fn(),
       company: null,
       setCompany: vi.fn(),
@@ -20,9 +40,17 @@ describe("CompanyDetailsPage", () => {
       setCompanyNumbers: vi.fn(),
     },
   };
-  const company = mockCompanies[1];
+  const company = mockCompanies.data[1];
 
-  it.todo("should show company name on page title");
+  it("should show Company name on page title", async () => {
+    render(
+      <CompanyContext.Provider value={{ ...companyProviderProps.value }}>
+        <CompanyDetailsPage />
+      </CompanyContext.Provider>
+    );
+
+    await waitFor(() => expect(document.title).toEqual("Engineering Company"));
+  });
 
   it("should show an empty message when company is not found", async () => {
     const { findByText } = render(

@@ -2,10 +2,6 @@ import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import {
-  Company,
-  CompanyNumber,
-} from "../../../features/companies/company.type";
-import {
   getCompanyByIdService,
   getNumbersByCompanyIdService,
 } from "../../../features/companies/company.service";
@@ -40,12 +36,14 @@ const CompanyPage = () => {
         )
       ) {
         const fetchCompanyPhones = async () => {
-          const responseNumbers = await getNumbersByCompanyIdService(companyId);
+          try {
+            const responseNumbers = await getNumbersByCompanyIdService(
+              companyId
+            );
 
-          if (responseNumbers.ok) {
-            const data = (await responseNumbers.json()) as CompanyNumber[];
-
-            setCompanyNumbers(data);
+            setCompanyNumbers(responseNumbers.data);
+          } catch (error) {
+            console.log("[CompanyPage][fetchCompanyPhones]", error);
           }
         };
         fetchCompanyPhones();
@@ -56,23 +54,18 @@ const CompanyPage = () => {
 
     if (companyId) {
       const fetchCompanyAndPhones = async () => {
-        const [responseCompany, responseNumbers] = await Promise.all([
-          getCompanyByIdService(companyId),
-          getNumbersByCompanyIdService(companyId),
-        ]);
+        try {
+          const [responseCompany, responseNumbers] = await Promise.all([
+            getCompanyByIdService(companyId),
+            getNumbersByCompanyIdService(companyId),
+          ]);
 
-        if (responseCompany.ok) {
-          const data = (await responseCompany.json()) as Company;
+          document.title = responseCompany.data.name;
+          setCompany(responseCompany.data);
 
-          document.title = data.name;
-
-          setCompany(data);
-        }
-
-        if (responseNumbers.ok) {
-          const data = (await responseNumbers.json()) as CompanyNumber[];
-
-          setCompanyNumbers(data);
+          setCompanyNumbers(responseNumbers.data);
+        } catch (error) {
+          console.log("[CompanyPage][fetchCompanyAndPhones]", error);
         }
       };
       fetchCompanyAndPhones();

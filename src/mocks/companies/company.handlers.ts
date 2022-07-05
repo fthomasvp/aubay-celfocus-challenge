@@ -2,18 +2,20 @@ import { rest } from "msw";
 
 import { API_URL } from "../../constants";
 
-export const mockCompanies = [
-  {
-    id: 3,
-    name: "Car Wash",
-    vatin: "500754043",
-  },
-  {
-    id: 4,
-    name: "Engineering Company",
-    vatin: "500754044",
-  },
-];
+export const mockCompanies = {
+  data: [
+    {
+      id: 3,
+      name: "Car Wash",
+      vatin: "500754043",
+    },
+    {
+      id: 4,
+      name: "Engineering Company",
+      vatin: "500754044",
+    },
+  ],
+};
 
 export const mockPhoneNumbers = [
   {
@@ -35,7 +37,9 @@ export const companyHandlers = [
 
   rest.get(`${API_URL}/companies/:companyId`, (req, res, ctx) => {
     const { companyId } = req.params;
-    const aCompany = mockCompanies.find(({ id }) => id === Number(companyId));
+    const aCompany = mockCompanies.data.find(
+      ({ id }) => id === Number(companyId)
+    );
 
     return res(ctx.status(200), ctx.json(aCompany));
   }),

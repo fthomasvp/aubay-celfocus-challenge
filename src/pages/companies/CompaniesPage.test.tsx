@@ -1,77 +1,113 @@
 import { vi } from "vitest";
 
-import { render, waitFor } from "../../utils/test-utils";
+import { render, screen, waitFor, act } from "../../utils/test-utils";
 import { CompanyContext } from "../../contexts/company.context";
 import { mockCompanies } from "../../mocks/companies/company.handlers";
+import { getCompaniesService } from "../../features/companies/company.service";
+import { Company, CompanyNumber } from "../../features/companies/company.type";
 
 import CompaniesPage from "./CompaniesPage";
 
+vi.mock("../../features/companies/company.service", () => {
+  return {
+    getCompaniesService: vi.fn(() => mockCompanies),
+  };
+});
+
 describe("CompaniesPage", () => {
-  afterEach(async () => {
-    await waitFor(() => expect(document.title).toEqual("Companies"));
+  afterAll(() => {
+    vi.unmock("../../features/companies/company.service");
   });
 
   const companyProviderProps = {
     value: {
-      companies: [],
+      companies: [] as Company[],
       setCompanies: vi.fn(),
       company: null,
       setCompany: vi.fn(),
-      companyNumbers: [],
+      companyNumbers: [] as CompanyNumber[],
       setCompanyNumbers: vi.fn(),
     },
   };
 
-  it("should show companies heading", async () => {
-    const { findByRole } = render(
+  it("should show Companies on page title", async () => {
+    render(
       <CompanyContext.Provider value={{ ...companyProviderProps.value }}>
         <CompaniesPage />
       </CompanyContext.Provider>
     );
 
-    const companiesHeading = await findByRole("heading", {
+    await waitFor(() => expect(document.title).toEqual("Companies"));
+  });
+
+  it("should show Companies heading", async () => {
+    render(
+      <CompanyContext.Provider value={{ ...companyProviderProps.value }}>
+        <CompaniesPage />
+      </CompanyContext.Provider>
+    );
+
+    const companiesHeading = await screen.findByRole("heading", {
       level: 1,
       name: "Companies",
     });
     expect(companiesHeading).toBeInTheDocument();
   });
 
-  it("should show an empty message", async () => {
-    const { findByText } = render(
+  it("should show empty message when companies are not found", async () => {
+    render(
       <CompanyContext.Provider value={{ ...companyProviderProps.value }}>
         <CompaniesPage />
       </CompanyContext.Provider>
     );
 
-    expect(await findByText("There is no data to display")).toBeInTheDocument();
+    expect(
+      await screen.findByText("There is no data to display")
+    ).toBeInTheDocument();
   });
 
-  it("should show a list of companies", async () => {
-    const { findByRole, findByText, findAllByRole } = render(
+  it("should show company table", async () => {
+    const localCompanyProviderProps = companyProviderProps;
+
+    const { rerender } = render(
+      <CompanyContext.Provider value={{ ...localCompanyProviderProps.value }}>
+        <CompaniesPage />
+      </CompanyContext.Provider>
+    );
+
+    expect(getCompaniesService).toHaveReturnedWith(mockCompanies);
+
+    const { setCompanies } = localCompanyProviderProps.value;
+    expect(setCompanies).toBeCalled();
+
+    rerender(
       <CompanyContext.Provider
-        value={{ ...companyProviderProps.value, companies: mockCompanies }}
+        value={{
+          ...localCompanyProviderProps.value,
+          companies: mockCompanies.data,
+        }}
       >
         <CompaniesPage />
       </CompanyContext.Provider>
     );
 
-    const companiesTable = await findByRole("table");
+    const companiesTable = await screen.findByRole("table");
     expect(companiesTable).toBeInTheDocument();
 
-    const companyNameColumn = await findByText("Company name");
+    const companyNameColumn = await screen.findByText("Company name");
     expect(companyNameColumn).toBeInTheDocument();
 
-    const vatinColumn = await findByText("vatin");
+    const vatinColumn = await screen.findByText("vatin");
     expect(vatinColumn).toBeInTheDocument();
 
-    const tableRows = await findAllByRole("row");
+    const tableRows = await screen.findAllByRole("row");
     tableRows.forEach((item) => {
       const companyNameElement = item.firstElementChild;
       const vatinElement = item.lastElementChild;
 
-      // Skip head row
+      // Skip table head row
       if (vatinElement?.innerHTML !== "vatin") {
-        const aCompany = mockCompanies.find(
+        const aCompany = mockCompanies.data.find(
           ({ name }) => name === companyNameElement?.firstChild?.textContent
         );
 

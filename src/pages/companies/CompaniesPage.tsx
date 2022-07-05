@@ -24,15 +24,11 @@ const CompaniesPage = () => {
     if (companies.length === 0) {
       const fetchCompanies = async () => {
         try {
-          const response = await getCompaniesService();
+          const { data } = await getCompaniesService();
 
-          if (response.ok) {
-            const data = (await response.json()) as Company[];
-
-            setCompanies(data);
-          }
+          setCompanies(data);
         } catch (error) {
-          console.log("[error][fetchCompanies]", error);
+          console.log("[CompaniesPage][fetchCompanies]", error);
         }
       };
       fetchCompanies();
