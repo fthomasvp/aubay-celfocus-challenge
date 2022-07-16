@@ -3,20 +3,26 @@ import { vi } from "vitest";
 import { render } from "../../../utils/test-utils";
 import { CompanyContext } from "../../../contexts/company.context";
 import { mockCompanies } from "../../../mocks/companies/company.handlers";
+import {
+  Company,
+  CompanyNumber,
+} from "../../../features/companies/company.type";
 
 import NumberDetailsPage from "./NumberDetailsPage";
 
 describe("NumberDetailsPage", () => {
   const companyProviderProps = {
     value: {
-      companies: mockCompanies,
+      companies: [] as Company[],
       setCompanies: vi.fn(),
       company: null,
       setCompany: vi.fn(),
-      companyNumbers: [],
+      companyNumbers: [] as CompanyNumber[],
       setCompanyNumbers: vi.fn(),
     },
   };
+
+  it.todo("should show Company name and phone on page title");
 
   it("should show an empty message when number is not found", async () => {
     const { findByText } = render(
@@ -41,5 +47,5 @@ describe("NumberDetailsPage", () => {
     expect(goBackButton).toBeInTheDocument();
   });
 
-  it.todo("should show number and type details");
+  it.todo("should show company number and type details");
 });
