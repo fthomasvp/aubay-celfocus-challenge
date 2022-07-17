@@ -1,24 +1,16 @@
 import { vi } from "vitest";
 
-import { render, screen, waitFor, act } from "../../utils/test-utils";
-import { CompanyContext } from "../../contexts/company.context";
-import { mockCompanies } from "../../mocks/companies/company.handlers";
-import { getCompaniesService } from "../../features/companies/company.service";
-import { Company, CompanyNumber } from "../../features/companies/company.type";
+import { render, screen, waitFor } from "../../../utils/test-utils";
+import { CompanyContext } from "../../../contexts/company.context";
+import { mockCompanies } from "../../../mocks/companies/company.handlers";
+import {
+  Company,
+  CompanyNumber,
+} from "../../../features/companies/company.type";
 
-import CompaniesPage from "./CompaniesPage";
-
-vi.mock("../../features/companies/company.service", () => {
-  return {
-    getCompaniesService: vi.fn(() => mockCompanies),
-  };
-});
+import CompaniesPage from "../CompaniesPage";
 
 describe("CompaniesPage", () => {
-  afterAll(() => {
-    vi.unmock("../../features/companies/company.service");
-  });
-
   const companyProviderProps = {
     value: {
       companies: [] as Company[],
@@ -74,11 +66,6 @@ describe("CompaniesPage", () => {
         <CompaniesPage />
       </CompanyContext.Provider>
     );
-
-    expect(getCompaniesService).toHaveReturnedWith(mockCompanies);
-
-    const { setCompanies } = localCompanyProviderProps.value;
-    expect(setCompanies).toBeCalled();
 
     rerender(
       <CompanyContext.Provider

@@ -1,6 +1,6 @@
-import { render } from "../../utils/test-utils";
+import { render } from "../../../utils/test-utils";
 
-import LoadingIndicator from "./LoadingIndicator";
+import LoadingIndicator from "../LoadingIndicator";
 
 describe("LoadingIndicator", () => {
   it("should show an loading indicator", async () => {

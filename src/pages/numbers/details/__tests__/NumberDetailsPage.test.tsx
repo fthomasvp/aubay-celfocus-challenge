@@ -1,14 +1,14 @@
 import { vi } from "vitest";
 
-import { render } from "../../../utils/test-utils";
-import { CompanyContext } from "../../../contexts/company.context";
-import { mockCompanies } from "../../../mocks/companies/company.handlers";
+import { render } from "../../../../utils/test-utils";
+import { CompanyContext } from "../../../../contexts/company.context";
+import { mockCompanies } from "../../../../mocks/companies/company.handlers";
 import {
   Company,
   CompanyNumber,
-} from "../../../features/companies/company.type";
+} from "../../../../features/companies/company.type";
 
-import NumberDetailsPage from "./NumberDetailsPage";
+import NumberDetailsPage from "../NumberDetailsPage";
 
 describe("NumberDetailsPage", () => {
   const companyProviderProps = {

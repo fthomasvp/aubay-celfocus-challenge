@@ -1,14 +1,14 @@
 import { vi } from "vitest";
 
-import { render, waitFor } from "../../../utils/test-utils";
-import { CompanyContext } from "../../../contexts/company.context";
+import { render, waitFor } from "../../../../utils/test-utils";
+import { CompanyContext } from "../../../../contexts/company.context";
 import {
   mockCompanies,
   mockPhoneNumbers,
-} from "../../../mocks/companies/company.handlers";
+} from "../../../../mocks/companies/company.handlers";
 
-import CompanyDetailsPage from "./CompanyDetailsPage";
-import { Company } from "../../../features/companies/company.type";
+import CompanyDetailsPage from "../CompanyDetailsPage";
+import { Company } from "../../../../features/companies/company.type";
 
 vi.mock("react-router-dom", async () => {
   const reactRouterDom = (await vi.importActual("react-router-dom")) as Object;
@@ -19,13 +19,6 @@ vi.mock("react-router-dom", async () => {
       companyId: "4",
     }),
     useRouteMatch: () => ({ url: "/companies/4" }),
-  };
-});
-
-vi.mock("../../features/companies/company.service", () => {
-  return {
-    getCompanyByIdService: vi.fn(() => mockCompanies.data[1]),
-    getNumbersByCompanyIdService: vi.fn(() => mockCompanies),
   };
 });
 

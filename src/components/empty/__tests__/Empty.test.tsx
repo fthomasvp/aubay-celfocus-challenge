@@ -1,6 +1,6 @@
-import { render } from "../../utils/test-utils";
+import { render } from "../../../utils/test-utils";
 
-import Empty from "./Empty";
+import Empty from "../Empty";
 
 describe("Empty", () => {
   it("should show default description", async () => {
